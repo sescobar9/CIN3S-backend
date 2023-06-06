@@ -1,12 +1,14 @@
 package com.example.reservas.contollers;
 
+import com.example.reservas.dtos.ReservaDto;
 import com.example.reservas.model.Reserva;
-import com.example.reservas.servicio.ReservaService;
+import com.example.reservas.service.ReservaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,33 +20,23 @@ public class ReservaController{
     private ReservaService reservaService;
 
     @PostMapping("/create")
-    public ResponseEntity<Reserva> create(@RequestBody Reserva reserva){
-        Reserva newReserva = reservaService.create(reserva);
-        return new ResponseEntity<>(newReserva, HttpStatus.CREATED);
+    public ResponseEntity<ReservaDto> create(@RequestBody ReservaDto reservaDto){
+        return new ResponseEntity<>(reservaService.create(reservaDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Reserva> update(@RequestBody Reserva reserva){
-        Reserva newReserva = reservaService.create(reserva);
-        return new ResponseEntity<>(newReserva, HttpStatus.OK);
+    public ResponseEntity<ReservaDto> update(@RequestBody ReservaDto reservaDto){
+        return new ResponseEntity<>(reservaService.update(reservaDto), HttpStatus.OK);
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<Reserva> getById(@PathVariable("id") int id){
-        Reserva newReserva = reservaService.getById(id);
-        if (newReserva == null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(newReserva, HttpStatus.OK);
+    public ResponseEntity<ReservaDto> getById(@PathVariable("id") int id){
+        return new ResponseEntity<>(reservaService.getById(id), HttpStatus.OK);
     }
 
     @GetMapping("/obtenerTodos")
-    public ResponseEntity<List<Reserva>> getAll(){
-        List<Reserva> reservas = reservaService.getAllReservas();
-        if (reservas.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(reservas, HttpStatus.OK);
+    public ResponseEntity<List<ReservaDto>> getAll(){
+        return new ResponseEntity<>(reservaService.getAllReservas(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -53,13 +45,5 @@ public class ReservaController{
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/obtenerPorHora/{hora}")
-    public ResponseEntity<List<Reserva>> getByHoraReserva(@PathVariable("hora") LocalDateTime hora){
-        List<Reserva> reservas = reservaService.getByHoraReserva(hora);
-        if (reservas.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(reservas, HttpStatus.OK);
-    }
 
 }
